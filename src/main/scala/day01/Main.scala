@@ -7,6 +7,7 @@ import fs2.io.file.{Files, Path}
 import java.io.FileNotFoundException
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
+import scala.util.chaining._
 
 object Main:
 
@@ -18,6 +19,13 @@ object Main:
     else
       State(previousValue = Some(measurement), state.increases)
   }).map(_.increases)
+
+  def calcPart2(input: Stream[IO, Long]): Stream[IO, Long] =
+    input
+      .sliding(3, 1)
+      .filter(_.size == 3)
+      .map(_.toList.sum)
+      .pipe(calcPart1)
 
   private[Main] case class State(previousValue: Option[Long], increases: Long)
 
