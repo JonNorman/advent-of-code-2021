@@ -17,6 +17,12 @@ object Main:
       .fold(Position.empty)(_ + _)
       .map(_.vector)
 
+  def calcPart2(input: Stream[IO, String]): Stream[IO, Long] =
+    input
+      .through(Command.parseCommands)
+      .fold(AimedPosition.empty)(_ + _)
+      .map(_.vector)
+
 enum Direction:
   case forward, up, down
 
@@ -39,6 +45,24 @@ object Command {
         case Some(command) => command
       }
   }
+}
+
+case class AimedPosition(horizontal: Long, depth: Long, aim: Long) {
+
+  def +(command: Command): AimedPosition = {
+    command.direction match {
+      case Direction.forward => this.copy(horizontal = horizontal + command.units, depth = depth + (aim * command.units))
+      case Direction.up => this.copy(aim = aim - command.units)
+      case Direction.down => this.copy(aim = aim + command.units)
+    }
+  }
+
+  val vector: Long = horizontal * depth
+
+}
+
+object AimedPosition {
+  val empty: AimedPosition = AimedPosition(0, 0, 0)
 }
 
 case class Position(horizontal: Long, depth: Long) {

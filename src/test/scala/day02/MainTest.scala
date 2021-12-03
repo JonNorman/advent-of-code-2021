@@ -22,6 +22,7 @@ class MainTest extends AnyFlatSpec {
     )
 
   private val verifyVectorPart1 = verifyVector(Main.calcPart1)
+  private val verifyVectorPart2 = verifyVector(Main.calcPart2)
 
   "Day 02 part 1" should "determine the correct vector in the example" in {
 
@@ -49,5 +50,33 @@ class MainTest extends AnyFlatSpec {
       .readResourceLines("/day_02.txt")
 
     verifyVectorPart1(input, 1604850)
+  }
+
+  "Day 02 part 2" should "determine the correct vector in the example" in {
+
+    val input = Stream.emits[IO, String](
+      List(
+        "forward 5",
+        "down 5",
+        "forward 8",
+        "up 3",
+        "down 8",
+        "forward 2",
+      )
+    )
+    verifyVectorPart2(input, 900)
+  }
+
+  it should "determine the correct vector in an empty list" in {
+
+    val input = Stream.emits[IO, String](List.empty)
+    verifyVectorPart2(input, 0)
+  }
+
+  it should "determine the correct answer to the day 02 puzzle part 2" in {
+    val input = TestHelpers
+      .readResourceLines("/day_02.txt")
+
+    verifyVectorPart2(input, 1685186100)
   }
 }
