@@ -26,6 +26,16 @@ object TestHelpers:
         .through(text.lines)
     }
 
+  def readResourceChars(resourcePath: String): Stream[IO, Char] =
+
+    findResource(resourcePath) match {
+      case Failure(exception) => Stream.raiseError(exception)
+      case Success(resource) => Files[IO]
+        .readAll(resource)
+        .through(text.utf8.decode)
+        .flatMap(Stream.emits)
+    }
+
   private def findResource(resourcePath: String): Try[Path] =
     Option(
       getClass
